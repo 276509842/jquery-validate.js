@@ -18,7 +18,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ========================================================= */
-;(function($) {     	
+;(function($) { 
+	/**
+	 * validateForm只做form验证
+	 * validate绑定表单事件，比如焦点获取、离开时，错误提示的处理
+	 */
+	$.fn.validateForm = function(options) {
+		var globalOptions  = $.extend({}, defaults, options);
+		return validateForm($(this), globalOptions);
+	};
+	
+	/**
+	 * 清除Validate产生的错误信息
+	 */
+	$.fn.clearValidateError = function() {
+		$(this).find("input,textarea,select").each(function() {
+			var el = $(this);
+			var valid = ( el.attr('validate-type')==undefined ) ? null : el.attr('validate-type').split(' ');
+				
+			if(valid !== null && valid.length > 0){
+				var curTextDiv=el.parent(), curErrorEl = curTextDiv.children('.validate-error');
+				
+				if(curErrorEl.hasClass('validate-error')){
+					curErrorEl.remove();
+				} else if (curTextDiv.parent().children('.validate-error').hasClass('validate-error')){
+					curTextDiv.parent().children('.validate-error').remove();
+				}
+				
+				el.removeClass('error').removeClass('right');
+			}
+		});
+	};
+	
 	$.fn.validate = function(options) {
 		var globalOptions  = $.extend({submitButton : '[btn-type=true]'}, defaults, options);
 		var $this = this;
@@ -103,7 +134,8 @@
 			
 	};
 	
-	var validateForm=function(obj,globalOptions){
+	
+	var validateForm = function(obj, globalOptions){
 		
 		var validationError = false;
 		$(obj).find("input:visible,textarea:visible,select:visible").each(function(){

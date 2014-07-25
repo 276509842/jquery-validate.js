@@ -10,7 +10,11 @@ http://vikenlove.github.io/jquery-Lweight-validate
 
 =========================================================================================
 改编：
-将属性命名空间，统一修改为validate-
+·将属性命名空间，统一修改为validate-
+·原有处理修改为$.fn.validate，主要实现form表单的fouce、blur事件，验证的处理
+  原有formCall回调函数，可实现验证后的处理
+·考虑验证的灵活性，加入$.fn.validateForm，只做form验证，返回boolean
+·加入$.fn.clearValidateError，清除Validate产生的错误信息，便于form初始化
 
 =========================================================================================
 
@@ -52,7 +56,7 @@ $('#form').validate(options)
 校验属性-other config：
 
 <pre>
-non-required: validate-type规则下 非填写情况下不校验配置
+validate-non-required: validate-type规则下 非填写情况下不校验配置
 validate-required-message：自定义提示信息
 validate-min-max：文本长度校验-例：validate-min-max="1-10" 最小长度为1，最大长度10
          validate-min-message：最小长度提示信息
