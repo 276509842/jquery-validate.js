@@ -1,0 +1,170 @@
+<!DOCTYPE html> 
+<html> 
+  <head> 
+	<meta charset="utf-8">
+	<title>Forms</title> 
+<link href="Lweight.css" type="text/css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" media="screen" href="stylesheet.css">
+	<script src="jquery.js"></script> 
+	<!--<script src="jquery-Lweight-validate-min.js"></script>-->  
+	<script src="jquery-Lweight-validate.js"></script>
+	<script>
+
+		$(function(){		
+		$('#form').validate(
+			{
+				formCall:function(){formCallFunction();},
+				isAlert:false,
+				formKey:false,
+				alterCall:function(msg){callbackFunction(msg);}			
+			});						
+		});
+		
+		function formCallFunction(){
+			alert("回调函数:");
+		}	
+		
+		function callbackFunction(msg){
+			alert("alert:"+msg);
+		}	
+		function mycallback(){
+			if($("#inputName").val()=="viken"){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+	</script>
+	
+</head> 
+<body>
+ 
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+	 	<h1>jquery-Lweight-validation.js </h1>
+	 
+		<form id="form" class="form-horizontal" form-key="true">
+			<div class="control-group">
+				<label class="control-label" for="inputtext">数字</label>
+				<div class="controls">
+					<input type="text" id="inputtext" validate-type="number" validate-non-required='true'>
+						
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputtext">文本</label>
+				<div class="controls">
+					<input type="text" id="inputtext" validate-type="unRequired"
+						validate-min-max="3-5" validate-min-message="字符长度不得小于3个字符" 
+						validate-max-message="字符长度不得超过5个字符"  
+						validate-required-message="文本不能为空！"  >
+						
+				</div>
+			</div>
+			
+				<div class="control-group">
+				<label class="control-label" for="inputName">用户名</label>
+				<div class="controls">
+					<input type="text" id="inputName" validate-type="required" 
+					data-callback="mycallback()" validate-call-message="用户名名已存在"  validate-required-message="用户名不能为空" >
+					</div>
+			</div>
+			
+			
+			
+			
+			
+			<div class="control-group">
+				<label class="control-label" for="inputIdcard">身份证</label>
+				<div class="controls">
+					<input type="text" id="inputIdcard" validate-type="idCard" validate-required-message="请输入正确的身份证号！" >
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="inputEmail">邮箱</label>
+				<div class="controls">
+					<input type="text" id="inputEmail" validate-type="mail" validate-required-message="邮箱格式不正确！" >
+				</div>
+			</div>
+			
+			
+			<div class="control-group">
+				<label class="control-label" for="inputPassword">密码</label>
+				<div class="controls">
+					<input type="password" id="inputPassword" validate-type="passWord" validate-required-message="密码长度必须在6~16之间！" >
+
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputPassword">确认密码</label>
+				<div class="controls">
+					<input type="password" id="inputComfirmPassword" validate-type="confirmPwd" validate-required-message="请确认两次密码一致" >
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputMobile">手机号码</label>
+				<div class="controls">
+					<input type="text" id="inputMobile" validate-type="mobile" validate-non-required='true' validate-required-message="请输入11位正确手机号码！" >
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputMobile">日期YYYY-MM-DD</label>
+				<div class="controls">
+					<input type="text" id="inputDateYmd" validate-type="dateYmd" validate-required-message="日期格式不正确！" >
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputMobile">城市</label>
+				<div class="controls">
+					<select id="inputSelect" validate-type="required" validate-required-message="请选择城市">
+						<option value="">请选择</option>
+						<option value="1">大连</option>
+						<option value="2">北京</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="inputInofo">描述说明</label>
+				<div class="controls">
+					<textarea id="inputInofo" check-type="required" required-message="描述说明不能为空" rows="10" cols="50" ></textarea>
+				</div>
+			</div>
+			
+					<div class="control-group">
+				<label class="control-label" for="inputInofo">起始时间</label>
+				<div class="controls">
+						<input type="text" id="inputDateST" check-type="dateCompare"  >
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="inputInofo">结束时间</label>
+				<div class="controls">
+						<input type="text" id="inputDateED" check-type="dateCompare" >
+				</div>
+			</div>	
+			
+			<div class="control-group">
+				<div class="controls">
+				
+				<button type="button" id="subBtn" btn-type="true" class="btn btn-primary" data-toggle="button">保存</button>
+				<button type="button" id="resBtn" btn-type="true" class="btn btn-primary" data-toggle="button">提交审核</button>
+				<button type="button" id="resBtn" btn-type="false" class="btn btn-primary" data-toggle="button">返回</button>
+				</div>
+			</div>
+		</form>
+      </section>
+    </div>
+
+ 
+  </body>
+
+
+</html>
+
+
