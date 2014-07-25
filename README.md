@@ -10,11 +10,23 @@ http://vikenlove.github.io/jquery-Lweight-validate
 
 =========================================================================================
 改编：
+<ul>
+<li>
 ·将属性命名空间，统一修改为validate-
+</li>
+<li>
 ·原有处理修改为$.fn.validate，主要实现form表单的fouce、blur事件，验证的处理
+</li>
+<li>
   原有formCall回调函数，可实现验证后的处理
+</li>
+<li>
 ·考虑验证的灵活性，加入$.fn.validateForm，只做form验证，返回boolean
+</li>
+<li>
 ·加入$.fn.clearValidateError，清除Validate产生的错误信息，便于form初始化
+</li>
+</ul>
 
 =========================================================================================
 
