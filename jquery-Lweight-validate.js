@@ -34,8 +34,8 @@
 	$.fn.clearValidateError = function() {
 		$(this).find("input,textarea,select").each(function() {
 			var el = $(this);
-			var valid = ( el.attr('validate-type')==undefined ) ? null : el.attr('validate-type').split(' ');
-				
+			var valid = ( el.attr('validate-type')==undefined ) ? null : $.trim(el.attr('validate-type'));
+				console.log(valid + " | " + el.attr('validate-type'));
 			if(valid !== null && valid.length > 0){
 				var curTextDiv=el.parent(), curErrorEl = curTextDiv.children('.validate-error');
 				
@@ -113,7 +113,7 @@
 		$(obj).find("input,textarea,select").each(function() {
 		
 			var el = $(this);
-			var valid = ( el.attr('validate-type')==undefined ) ? null : el.attr('validate-type').split(' ');
+			var valid = ( el.attr('validate-type')==undefined ) ? null : $.trim(el.attr('validate-type'));
 				
 			if(valid !== null && valid.length > 0){
 			
@@ -141,7 +141,7 @@
 		$(obj).find("input:visible,textarea:visible,select:visible").each(function(){
 		
 			var el = $(this);
-			var valid = (el.attr('validate-type') == undefined) ? null : el.attr('validate-type').split(' ');
+			var valid = (el.attr('validate-type') == undefined) ? null : $.trim(el.attr('validate-type'));
 			
 			if(valid !==null && valid.length > 0){
 				if(!validateField(el, valid, globalOptions)){
@@ -163,10 +163,14 @@
 			elLength = el.val().length;
 		var isNon = (el.attr('validate-non-required') == undefined || el.attr('validate-non-required') == 'false') ? false : true;
 		
+		if (typeof valid != "Array") {
+			valid = [valid];
+		}
+		
 		var rules = globalOptions.validRules;
 		for ( var i = 0, j = rules.length; i < j; i++) {
 			var rule = rules[i];
-
+		
 			if (valid == rule.name) {
 				var ruleVal = rule.validate(el.val());
 				if (isNon) {
@@ -186,6 +190,10 @@
 							: el.attr('required-message');
 					break;
 				}
+			}
+			
+			if (error) {
+				break;
 			}
 		}
 
@@ -279,7 +287,6 @@
 
 		return !error;
 	};
-
 			
 	var checkIdCard = function(value) {
 		var iSum = 0, birthday;
