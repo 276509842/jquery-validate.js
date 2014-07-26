@@ -19,69 +19,58 @@
  * limitations under the License.
  * ========================================================= */
 ;(function($) { 
+	
 	/**
-	 * validateForm只做form验证
-	 * validate绑定表单事件，比如焦点获取、离开时，错误提示的处理
+	 * validate.init绑定表单事件，比如焦点获取、离开时，错误提示的处理
+	 * validate只做form验证
 	 */
-	$.fn.validateForm = function(options) {
+	
+	$.fn.validate = function(options) {
 		var globalOptions  = $.extend({}, defaults, options);
-		return validateForm($(this), globalOptions);
+		
+		return validate(this, globalOptions);
+	};
+	
+	$.fn.bindValidation = function(options) {
+		var globalOptions  = $.extend({submitButton : '[btn-type=true]'}, defaults, options);
+		var $this = $(this);
+		
+		var isInput =  $(this).is('input') || $(this).is('select') || $(this).is('textarea');
+		
+		if ( !isInput ) {
+			$this.find(globalOptions.submitButton).click(function(){
+				validateClick($this, globalOptions);
+			});
+			
+			if(globalOptions.formKey){
+				$(document).keyup(function(event){
+					switch(event.keyCode) {
+					case 13:
+						validateClick($this, globalOptions);
+						break; 
+					}
+				});
+			};
+		}
+		
+		validateBlur($this, globalOptions);
+		
 	};
 	
 	/**
 	 * 清除Validate产生的错误信息
 	 */
-	$.fn.clearValidateError = function() {
-		$(this).find("input,textarea,select").each(function() {
-			var el = $(this);
-			var valid = ( el.attr('validate-type')==undefined ) ? null : $.trim(el.attr('validate-type'));
-				console.log(valid + " | " + el.attr('validate-type'));
-			if(valid !== null && valid.length > 0){
-				var curTextDiv=el.parent(), curErrorEl = curTextDiv.children('.validate-error');
-				
-				if(curErrorEl.hasClass('validate-error')){
-					curErrorEl.remove();
-				} else if (curTextDiv.parent().children('.validate-error').hasClass('validate-error')){
-					curTextDiv.parent().children('.validate-error').remove();
-				}
-				
-				el.removeClass('error').removeClass('right');
-			}
-		});
-	};
-	
-	$.fn.validate = function(options) {
-		var globalOptions  = $.extend({submitButton : '[btn-type=true]'}, defaults, options);
-		var $this = this;
+	$.fn.clearValidationError = function() {
+		var isInput =  $(this).is('input') || $(this).is('select') || $(this).is('textarea');
 		
-		$this.find(globalOptions.submitButton).click(function(){
-			validateClick($this,globalOptions);
-		});
-		
-		
-		if(globalOptions.formKey){
-			$(document).keyup(function(event){
-			  switch(event.keyCode) {
-				case 13:
-					validateClick($this,globalOptions);
-					break; 
-				}
+		if (isInput) {
+			clearValidationError( $(this));
+		} else {
+			$(this).find("input,textarea,select").each(function() {
+				clearValidationError( $(this) );
 			});
-		};
-		
-		validateBlur($this, globalOptions);
-		
+		}
 	};
-
-
-	var validateClick = function(obj,globalOptions){
-		if(!validateForm(obj,globalOptions)){
-			if(globalOptions.formCall != undefined){
-				globalOptions.formCall();
-			}	
-		}	
-	};
-	
  
 	var defaults = {
         validRules : [
@@ -108,63 +97,102 @@
 		]
     };
 	
-			
-	var validateBlur = function(obj,globalOptions) {
-		$(obj).find("input,textarea,select").each(function() {
-		
-			var el = $(this);
-			var valid = ( el.attr('validate-type')==undefined ) ? null : $.trim(el.attr('validate-type'));
-				
-			if(valid !== null && valid.length > 0){
-			
-				el.focus(function(){
-					var curTextDiv=el.parent(), curErrorEl = curTextDiv.children('.validate-error');
-					
-					if(curErrorEl.hasClass('validate-error')){
-						curErrorEl.remove();
-					} else if (curTextDiv.parent().children('.validate-error').hasClass('validate-error')){
-						curTextDiv.parent().children('.validate-error').remove();
-					}	
-				});
-				el.blur(function() { 
-	                validateField(el, valid,globalOptions);
-	            });
-			}			
-		});
-			
+	var validateClick = function(obj,globalOptions){
+		if(validate(obj, globalOptions)){
+			if(globalOptions.formCall != undefined){
+				globalOptions.formCall();
+			}	
+		}	
 	};
 	
+	var validateBlur = function(obj,globalOptions) {
+		var isInput =  $(obj).is('input') || $(obj).is('select') || $(obj).is('textarea');
+		
+		if ( isInput ) {
+			initDomValidateAction($(obj), globalOptions);
+		} else {
+			$(obj).find("input,textarea,select").each(function() {
+				initDomValidateAction($(this), globalOptions);
+			});
+		}
+	};
 	
-	var validateForm = function(obj, globalOptions){
-		
-		var validationError = false;
-		$(obj).find("input:visible,textarea:visible,select:visible").each(function(){
-		
-			var el = $(this);
-			var valid = (el.attr('validate-type') == undefined) ? null : $.trim(el.attr('validate-type'));
+	var initDomValidateAction = function (obj, globalOptions) {
+		var el = $(obj);
+		var valid = ( el.attr('validate-type')==undefined ) ? null : $.trim(el.attr('validate-type'));
 			
-			if(valid !==null && valid.length > 0){
-				if(!validateField(el, valid, globalOptions)){
-					validationError=true;
-				}
+		if(valid !== null && valid.length > 0){
+		
+			el.focus(function(){
+				var curTextDiv=el.parent(), curErrorEl = curTextDiv.children('.validate-error');
+				
+				if(curErrorEl.hasClass('validate-error')){
+					curErrorEl.remove();
+				} else if (curTextDiv.parent().children('.validate-error').hasClass('validate-error')){
+					curTextDiv.parent().children('.validate-error').remove();
+				}	
+			});
+			
+			el.blur(function() { 
+                validateField(el, globalOptions);
+            });
+		}	
+	};
+	
+
+	var clearValidationError = function (obj) {
+		var el = $(obj);
+		var valid = ( el.attr('validate-type')==undefined ) ? null : $.trim(el.attr('validate-type'));
+			console.log(valid + " | " + el.attr('validate-type'));
+		if(valid !== null && valid.length > 0){
+			var curTextDiv=el.parent(), curErrorEl = curTextDiv.children('.validate-error');
+			
+			if(curErrorEl.hasClass('validate-error')){
+				curErrorEl.remove();
+			} else if (curTextDiv.parent().children('.validate-error').hasClass('validate-error')){
+				curTextDiv.parent().children('.validate-error').remove();
 			}
 			
-			if(globalOptions.isAlert){
-				if(validationError){
-					return false;
-				}				
-			}		
-		});
-		return validationError;
+			el.removeClass('error').removeClass('right');
+		}
 	};
-
-	var validateField = function(field, valid, globalOptions) {
+	
+	var validate = function(obj, globalOptions){
+		
+		var validationError = false;
+		
+		var isInput =  $(obj).is('input') || $(obj).is('select') || $(obj).is('textarea');
+		
+		if (isInput) {
+			if( !validateField(obj, globalOptions) ) {
+				validationError = true;
+			}
+		} else {
+			$(obj).find("input:visible,textarea:visible,select:visible").each(function(){
+				if( !validateField($(this), globalOptions) ) {
+					validationError = true;
+				}
+				
+				if(globalOptions.isAlert){
+					if(validationError){
+						return false;
+					}				
+				}
+			});
+		}
+		
+		return !validationError;
+	};
+	
+	var validateField = function(field, globalOptions) {
 		var el = $(field), error = false, isNonFlag = false, errorMsg = '', pwdStatus = 0, 
 			elLength = el.val().length;
+		var valid = (el.attr('validate-type') == undefined) ? null : $.trim(el.attr('validate-type'));
+		
 		var isNon = (el.attr('validate-non-required') == undefined || el.attr('validate-non-required') == 'false') ? false : true;
 		
-		if (typeof valid != "Array") {
-			valid = [valid];
+		if(valid == null || valid.length == 0) {
+			return true;
 		}
 		
 		var rules = globalOptions.validRules;
@@ -294,7 +322,7 @@
 			return true;
 		}
 		value = value.replace(/x$/i, "a");
-		if ($(this).defaults.city[0][parseInt(value.substr(0, 2))] == null) {
+		if (defaults.city[0][parseInt(value.substr(0, 2))] == null) {
 			return true;
 		}
 		birthday = value.substr(6, 4) + "-" + Number(value.substr(10, 2)) + "-"

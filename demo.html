@@ -11,13 +11,16 @@
 	<script>
 
 		$(function(){		
-		$('#form').validate(
+			$('#form').bindValidation(
 			{
 				formCall:function(){formCallFunction();},
 				isAlert:false,
 				formKey:false,
 				alterCall:function(msg){callbackFunction(msg);}			
-			});						
+			});
+			
+			
+				$('#aaa').bindValidation();					
 		});
 		
 		function formCallFunction(){
@@ -40,7 +43,10 @@
 </head> 
 <body>
  
-
+	<input id="aaa" validate-type="number" >
+	<button type="button" id="resBtn" btn-type="false" class="btn btn-primary" data-toggle="button" 
+		onclick="alert($('#aaa').validate());">验证</button>
+				
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
@@ -80,7 +86,7 @@
 			<div class="control-group">
 				<label class="control-label" for="inputIdcard">身份证</label>
 				<div class="controls">
-					<input type="text" id="inputIdcard" validate-type="idCard unRequired" validate-required-message="请输入正确的身份证号！" >
+					<input type="text" id="inputIdcard" validate-type="idCard" validate-required-message="请输入正确的身份证号！" >
 				</div>
 			</div>
 			
@@ -154,8 +160,9 @@
 				
 				<button type="button" id="subBtn" btn-type="true" class="btn btn-primary" data-toggle="button">保存</button>
 				<button type="button" id="resBtn" btn-type="true" class="btn btn-primary" data-toggle="button">提交审核</button>
-				<button type="button" id="resBtn" btn-type="false" class="btn btn-primary" data-toggle="button" onclick="$('#form').validateForm();">返回</button>
-				<button type="button" id="resBtn" btn-type="false" class="btn btn-primary" data-toggle="button" onclick="$('#form').clearValidateError();">清除</button>
+				<button type="button" id="resBtn" btn-type="false" class="btn btn-primary" data-toggle="button" onclick="console.log($('#form').validate());">返回</button>
+				<button type="button" id="resBtn" btn-type="false" class="btn btn-primary" data-toggle="button" onclick="$('#form').clearValidationError();">清除</button>
+				
 				</div>
 			</div>
 		</form>

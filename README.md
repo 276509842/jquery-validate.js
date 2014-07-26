@@ -15,19 +15,23 @@ http://vikenlove.github.io/jquery-Lweight-validate
 ·将属性命名空间，统一修改为validate-
 </li>
 <li>
-·原有处理修改为$.fn.validate，主要实现form表单的fouce、blur事件，验证的处理
+原有处理修改为$.fn.bindValidation，主要实现form表单的fouce、blur事件，验证的处理,
+如果想对提交按钮加入validtae支持，也可以使用options.submitButton配置，默认'[btn-type=true]'；
 </li>
 <li>
   原有formCall回调函数，可实现验证后的处理
+采用bindValidation设置提交按钮触发validate时间时，需使用options中的回调函数formCall。
 </li>
 <li>
-·考虑验证的灵活性，加入$.fn.validateForm，只做form验证，返回boolean
+考虑验证的灵活性，加入$.fn.validate，只做验证，返回boolean
 </li>
 <li>
-·加入$.fn.clearValidateError，清除Validate产生的错误信息，便于form初始化
+加入$.fn.clearValidationError，清除Validate产生的错误信息，便于form初始化
 </li>
 </ul>
 
+支持div、form、input、select、textarea的validate，如果是表单资源，只设置focus、blur事件
+如果是容器元素，则会选择设置提交按钮。
 =========================================================================================
 
 
@@ -37,7 +41,7 @@ $('#form').validate(options)
 </code>
 <pre>
 例:
-   	$('#form').validate( {
+   	$('#form').bindValidation( {
 		formCall:function(){formCallFunction();},
 		isAlert:false,
 		formKey:false,
