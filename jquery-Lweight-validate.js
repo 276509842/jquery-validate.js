@@ -228,25 +228,41 @@
 		if (!error) {
 
 			if (el.val().length > 0) {
-				var minMax = (el.attr('validate-min-max') == undefined) ? null : el
-						.attr('validate-min-max').split(' ');
+				var minMax = (el.attr('validate-min-max') == undefined) ? null : $.trim(el
+						.attr('validate-min-max'));
 				
 				var _callBack = (el.attr('data-callback') == undefined) ? null
-						: el.attr('data-callback').split(' ');
+						: $.trim(el.attr('data-callback'));
 
 				if (minMax !== null && minMax.length > 0) {
-					var min = el.attr('validate-min-max').split('-')[0], max = el.attr(
-							'validate-min-max').split('-')[1];
-					if (elLength < Number(min)) {
-						error = true;
-						errorMsg = (el.attr('validate-min-message') == undefined) ? "文本长度不能小于" + min + "个字符" : el.attr('validate-min-message');
-					} else if (max != undefined) {
-						if (elLength > Number(max)) {
+					minMax = minMax.indexOf() == -1 ? minMax + '-' : minMax;
+					var min = minMax.split('-')[0], 
+						max = minMax.split('-')[1];
+					
+					var isNum =  (valid == 'number');
+					
+					if (isNum) {
+						if (max != undefined && max != '' && el.val() < Number(min)) {
 							error = true;
-							errorMsg = (el.attr('validate-max-message') == undefined) ? "文本长度不能大于" + max + "个字符" : el.attr('validate-max-message');
+							errorMsg = (el.attr('validate-min-message') == undefined) ? "数值不能小于" + min : el.attr('validate-min-message');
+						} else if (max != undefined && max != '' && el.val() > Number(max)) {
+							error = true;
+							errorMsg = (el.attr('validate-max-message') == undefined) ? "数值不能大于" + max : el.attr('validate-max-message');
+						} else {
+							isNonFlag = true;
 						}
 					} else {
-						isNonFlag = true;
+						if (elLength < Number(min)) {
+							error = true;
+							errorMsg = (el.attr('validate-min-message') == undefined) ? "文本长度不能小于" + min + "个字符" : el.attr('validate-min-message');
+						} else if (max != undefined) {
+							if (elLength > Number(max)) {
+								error = true;
+								errorMsg = (el.attr('validate-max-message') == undefined) ? "文本长度不能大于" + max + "个字符" : el.attr('validate-max-message');
+							}
+						} else {
+							isNonFlag = true;
+						}
 					}
 				}
 				if (!error) {

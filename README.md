@@ -74,7 +74,7 @@ $('#form').validate(options)
 <pre>
 validate-non-required: validate-type规则下 非填写情况下不校验配置
 validate-required-message：自定义提示信息
-validate-min-max：文本长度校验-例：validate-min-max="1-10" 最小长度为1，最大长度10
+validate-min-max：文本长度校验，或者number类型最大最小值校验-例：validate-min-max="1-10" 最小长度为1，最大长度10
          validate-min-message：最小长度提示信息
          validate-max-message：最大长度提示信息
 data-callback：文本异步校验回调函数
