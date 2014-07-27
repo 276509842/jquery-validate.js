@@ -236,12 +236,10 @@
 
 				if (minMax !== null && minMax.length > 0) {
 					var isValue =  minMax.charAt(0) == 'V';
-					alert(minMax + " | " + isValue);
 					minMax = (minMax.charAt(0) == 'V' || minMax.charAt(0) == 'L') ? minMax.substring(1) : minMax;
 					minMax = minMax.indexOf() == -1 ? minMax + '-' : minMax;
 					var min = minMax.split('-')[0], 
 						max = minMax.split('-')[1];
-					alert(minMax + " | " + isValue + " | " + min);
 					
 					if (isValue) {
 						if (max != undefined && max != '' && el.val() < Number(min)) {
