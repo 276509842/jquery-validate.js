@@ -235,13 +235,15 @@
 						: $.trim(el.attr('data-callback'));
 
 				if (minMax !== null && minMax.length > 0) {
+					var isValue =  minMax.charAt(0) == 'V';
+					alert(minMax + " | " + isValue);
+					minMax = (minMax.charAt(0) == 'V' || minMax.charAt(0) == 'L') ? minMax.substring(1) : minMax;
 					minMax = minMax.indexOf() == -1 ? minMax + '-' : minMax;
 					var min = minMax.split('-')[0], 
 						max = minMax.split('-')[1];
+					alert(minMax + " | " + isValue + " | " + min);
 					
-					var isNum =  (valid == 'number');
-					
-					if (isNum) {
+					if (isValue) {
 						if (max != undefined && max != '' && el.val() < Number(min)) {
 							error = true;
 							errorMsg = (el.attr('validate-min-message') == undefined) ? "数值不能小于" + min : el.attr('validate-min-message');
