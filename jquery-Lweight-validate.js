@@ -380,7 +380,7 @@
 	var dateCompare = function(startDate, endDate, option) {
 		var flag = false;
 
-		if (startDate.length > 0 && endDate.length > 0) {
+		if (startDate != null && endDate != null && startDate.length > 0 && endDate.length > 0) {
 			var startDate = Number(startDate.replace(/-/g, ''));
 			var endDate = Number(endDate.replace(/-/g, ''));
 			if (option == 'gteq') {

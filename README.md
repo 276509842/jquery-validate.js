@@ -30,7 +30,7 @@ http://vikenlove.github.io/jquery-Lweight-validate
 </li>
 <li>
 修改Date开始时间、结束时间大小比较方式。
-只需要在结束日期上，加入validate-date-gteq/ validate-date-gt、validate-date-compare-message 属性。<br />
+只需要在结束日期上，加入validate-date-gteq/ validate-date-gt(值为起始时间的selector)、validate-date-compare-message 属性。<br />
 &lt;input type="text" id="endDate" placeholder="请输入结束时间" 
 	validate-type="dateYmd" validate-date-gteq="#startDate" validate-date-compare-message="结束时间不能晚于起始时间"&gt;
 </li>
