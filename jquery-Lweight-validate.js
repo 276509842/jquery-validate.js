@@ -86,7 +86,7 @@
 			{name: 'confirmPwd', validate: function(value) {return confirmPwd($.trim(value));}, defaultMsg: '两次密码不一致'},
 			{name: 'dateYmd', validate: function(value) {return checkDate($.trim(value));}, defaultMsg: '请输入YYYY--MM--DD格式'},
 			{name: 'idCard', validate: function(value) {return checkIdCard($.trim(value));}, defaultMsg: '请输入正确的身份证号码'},
-			{name: 'dateCompare', validate: function(value) {return dateCompare();}, defaultMsg: '起始日期不能大于结束日期'}
+			//{name: 'dateCompare', validate: function(value) {return dateCompare();}, defaultMsg: '起始日期不能大于结束日期'}
         ],
 		city : [
 			{11:"北京",12:"天津",13:"河北",14:"山西",15:"内蒙古",21:"辽宁",22:"吉林",
@@ -169,14 +169,17 @@
 			}
 		} else {
 			$(obj).find("input:visible,textarea:visible,select:visible").each(function(){
-				if( !validateField($(this), globalOptions) ) {
-					validationError = true;
-				}
 				
-				if(globalOptions.isAlert){
-					if(validationError){
-						return false;
-					}				
+				if ($(this).attr('disabled') == undefined || $(this).attr('disabled') == null || $(this).attr('disabled') == false) {
+					if( !validateField($(this), globalOptions) ) {
+						validationError = true;
+					}
+					
+					if(globalOptions.isAlert){
+						if(validationError){
+							return false;
+						}				
+					}
 				}
 			});
 		}
@@ -228,6 +231,7 @@
 		if (!error) {
 
 			if (el.val().length > 0) {
+				// 验证字符串长度范围，大小范围
 				var minMax = (el.attr('validate-min-max') == undefined) ? null : $.trim(el
 						.attr('validate-min-max'));
 				
@@ -265,6 +269,22 @@
 						}
 					}
 				}
+				
+				// 校验时间大小比较
+				var dataGt = (el.attr('validate-date-gt') == undefined) ? null : $.trim(el
+						.attr('validate-date-gt'));
+				var dataGtEq = (el.attr('validate-date-gteq') == undefined) ? null : $.trim(el
+						.attr('validate-date-gteq'));
+				
+				// 比较时间
+				if (dataGtEq !== null && dataGtEq.length > 0) {
+					error = dateCompare($(dataGtEq).val(), el.val(), 'gteq');
+					errorMsg =  (el.attr('validate-date-compare-message') == undefined) ? "起始日期不能大于结束日期" : el.attr('validate-date-compare-message');
+				} else if  (dataGt !== null && dataGt.length > 0) {
+					error = dateCompare($(dataGt).val(), el.val(), 'gt');
+				}
+				
+				
 				if (!error) {
 					if (_callBack !== null && _callBack.length > 0) {
 						var _ajaxCallBack = el.attr('data-callback');
@@ -357,14 +377,16 @@
 		return false;
 	};
 
-	var dateCompare = function() {
-		var $this = $("input[validate-type='dateCompare']"), flag = false;
+	var dateCompare = function(startDate, endDate, option) {
+		var flag = false;
 
-		if ($this.eq(0).val().length > 0 && $this.eq(1).val().length > 0) {
-			if ($this.eq(0).val() != $this.eq(1).val()) {
-				var startDate = Number($this.eq(0).val().replace(/-/g, '')), endDate = Number($this
-						.eq(1).val().replace(/-/g, ''));
-				flag = startDate < endDate ? false : true;
+		if (startDate.length > 0 && endDate.length > 0) {
+			var startDate = Number(startDate.replace(/-/g, ''));
+			var endDate = Number(endDate.replace(/-/g, ''));
+			if (option == 'gteq') {
+				flag = !(endDate >= startDate);
+			} else {
+				flag = !(endDate > startDate);
 			}
 		}
 		return flag;

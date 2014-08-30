@@ -144,14 +144,14 @@
 					<div class="control-group">
 				<label class="control-label" for="inputInofo">起始时间</label>
 				<div class="controls">
-						<input type="text" id="inputDateST" check-type="dateCompare"  >
+						<input type="text" id="inputDateST" validate-type="dateYmd"  >
 				</div>
 			</div>
 			
 			<div class="control-group">
 				<label class="control-label" for="inputInofo">结束时间</label>
 				<div class="controls">
-						<input type="text" id="inputDateED" check-type="dateCompare" >
+						<input type="text" id="inputDateED" validate-type="dateYmd" validate-date-gteq="#inputDateST" validate-date-compare-message="结束时间不能晚于起始时间" >
 				</div>
 			</div>	
 			
